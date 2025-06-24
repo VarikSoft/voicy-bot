@@ -1,0 +1,54 @@
+{
+  "modal_rename_title":       "Rename channel",
+  "modal_rename_label":       "New name",
+  "modal_rename_success":     "📛 Channel renamed to: **{name}**",
+
+  "modal_limit_title":        "Set user limit",
+  "modal_limit_label":        "Limit (0–99)",
+  "modal_limit_error":        "❌ Limit must be between 0 and 99.",
+  "modal_limit_success":      "✅ Limit set to: {limit}",
+
+  "modal_invite_title":       "Invite user",
+  "modal_invite_label":       "User (@mention, ID, username#1234 or name)",
+  "modal_invite_error":       "❌ Could not find user. Check input.",
+  "modal_invite_success":     "✅ {user} has been invited.",
+
+  "modal_kick_title":         "Kick user",
+  "modal_kick_label":         "User (@mention, ID, username#1234 or name)",
+  "modal_kick_error":         "❌ Could not find user. Check input.",
+  "modal_kick_success":       "👢 {user} has been kicked.",
+
+  "embed_title":              "🎛 Voice Channel Management",
+  "embed_desc":               "**Owner:** {owner}\n\nPress a button to perform an action or use slash-commands:\n{commands}",
+
+  "button_rename":            "Rename",
+  "button_limit":             "Limit",
+  "button_invite":            "Invite",
+  "button_kick":              "Kick",
+  "button_visible":           "Make Visible",
+  "button_invisible":         "Hide",
+  "button_lock":              "Lock",
+  "button_unlock":            "Unlock",
+  "button_assign":            "Assign Deputy",
+  "button_unassign":          "Remove Deputy",
+  "button_delete":            "Delete",
+
+  "error_not_owner":          "❌ Only the owner can use this.",
+
+  "cmd_limit_desc":           "Set user limit",
+  "cmd_rename_desc":          "Change channel name",
+  "cmd_invite_desc":          "Invite user",
+  "cmd_kick_desc":            "Kick user",
+  "cmd_delete_desc":          "Delete channel",
+  "cmd_visible_desc":         "Make channel visible",
+  "cmd_invisible_desc":       "Hide channel",
+  "cmd_lock_desc":            "Lock channel (invite only)",
+  "cmd_unlock_desc":          "Unlock channel",
+  "cmd_assign_desc":          "Assign deputy",
+  "cmd_unassign_desc":        "Remove deputy",
+
+  "select_invite_placeholder":    "Select a user to invite",
+  "select_kick_placeholder":      "Select a user to kick",
+  "select_assign_placeholder":    "Select a user to assign as deputy",
+  "select_unassign_placeholder":  "Select a user to remove as deputy"
+}
