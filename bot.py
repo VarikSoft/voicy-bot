@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# ——— Локализация ———————————————————————————————————————
+# ——— Localization ———————————————————————————————————————
 LANG = os.getenv("BOT_LANG", "en")
 lang_path = os.path.join(os.path.dirname(__file__), "lang", f"{LANG}.json")
 with open(lang_path, encoding="utf-8") as f:
@@ -17,22 +17,20 @@ with open(lang_path, encoding="utf-8") as f:
 def t(key: str, **kwargs) -> str:
     return _T.get(key, key).format(**kwargs)
 
-# ——— Константы ————————————————————————————————————————
+# ——— Constants ————————————————————————————————————————
 CREATE_VC_CHANNEL_ID = 1386893005578834020
 VC_CATEGORY_ID       = 1386453793012453417
-DEFAULT_TIMEOUT      = 5   # минут
+DEFAULT_TIMEOUT      = 5   # minutes
 TEMPLATES_FILE       = "templates.json"
+BASE_DIR             = os.path.dirname(__file__)
+TEMPLATES_PATH       = os.path.join(BASE_DIR, TEMPLATES_FILE)
 
-# Путь к файлу шаблонов рядом со скриптом
-BASE_DIR       = os.path.dirname(__file__)
-TEMPLATES_PATH = os.path.join(BASE_DIR, TEMPLATES_FILE)
-
-# ——— Инициализация бота —————————————————————————————————————
+# ——— Initializing bot —————————————————————————————————————
 intents = discord.Intents.all()
 bot = commands.Bot(command_prefix="!", intents=intents)
 tree = bot.tree
 
-# Хранилище: шаблоны настроек по владельцам
+# Template: User-specific settings templates
 # templates: { owner_id: {
 #     name: str,
 #     user_limit: int,
@@ -44,7 +42,7 @@ tree = bot.tree
 # } }
 templates: dict[int, dict] = {}
 
-# Активные приватные каналы: не сохраняются на диск
+# Active private channels: not saved to disk
 # private_vcs: { vc_id: {
 #     owner: int,
 #     channel: VoiceChannel,
@@ -55,7 +53,7 @@ templates: dict[int, dict] = {}
 private_vcs: dict[int, dict] = {}
 
 def save_templates():
-    """Сохраняет текущее состояние `templates` в JSON."""
+    """Saves the current state of templates to a JSON file."""
     data = {}
     for owner_id, tpl in templates.items():
         data[str(owner_id)] = {
@@ -71,7 +69,7 @@ def save_templates():
         json.dump(data, f, ensure_ascii=False, indent=2)
 
 async def load_templates():
-    """Загружает шаблоны из JSON (если файл есть)."""
+    """Loads templates from a JSON file, if present."""
     if not os.path.exists(TEMPLATES_PATH):
         return
     with open(TEMPLATES_PATH, "r", encoding="utf-8") as f:
@@ -92,20 +90,22 @@ async def load_templates():
         }
 
 def update_template_from_channel(owner_id: int, channel: discord.VoiceChannel, deputies: list[int]):
-    """Обновляет шаблон для владельца, исходя из текущих настроек канала."""
-    # Собираем списки приглашённых и кикнутых
+    """Updates the owner's template based on the current channel settings."""
+
+    # Collect lists of invited and kicked users
     invited = []
-    kicked  = []
+    kicked = []
     for target, perm in channel.overwrites.items():
         if isinstance(target, discord.Member):
             if perm.connect is True:
                 invited.append(target.id)
             if perm.connect is False:
                 kicked.append(target.id)
-    # Проверяем @everyone
+
+    # Check @everyone role permissions
     default_overwrite = channel.overwrites.get(channel.guild.default_role)
     visible = True
-    locked  = False
+    locked = False
     if default_overwrite:
         if default_overwrite.view_channel is not None:
             visible = default_overwrite.view_channel
@@ -136,7 +136,7 @@ async def on_ready():
     await load_templates()
     print(f"✅ Bot {bot.user} ready! Loaded {len(templates)} templates.")
 
-# ——— Модалки —————————————————————————————————————————————
+# ——— Modal —————————————————————————————————————————————
 
 class RenameModal(Modal):
     def __init__(self, channel: discord.VoiceChannel, owner_id: int):
@@ -149,7 +149,7 @@ class RenameModal(Modal):
     async def on_submit(self, interaction: discord.Interaction):
         new_name = self.input.value
         await self.channel.edit(name=new_name)
-        # обновляем шаблон
+        # updating template
         tpl = private_vcs[self.channel.id]
         update_template_from_channel(self.owner_id, self.channel, tpl["deputies"])
         await interaction.response.send_message(t("modal_rename_success", name=new_name), ephemeral=True)
@@ -174,7 +174,7 @@ class LimitModal(Modal):
         update_template_from_channel(self.owner_id, self.channel, tpl["deputies"])
         await interaction.response.send_message(t("modal_limit_success", limit=n), ephemeral=True)
 
-# ——— Селекты —————————————————————————————————————————————
+# ——— Select —————————————————————————————————————————————
 
 class InviteUserSelect(UserSelect):
     def __init__(self, channel: discord.VoiceChannel, owner_id: int):
@@ -188,7 +188,7 @@ class InviteUserSelect(UserSelect):
         perms[member] = discord.PermissionOverwrite(view_channel=True, connect=True)
         await self.channel.edit(overwrites=perms)
         tpl = private_vcs[self.channel.id]
-        # добавляем в invited, убираем из kicked
+        # Add to invited, remove from kicked
         deputies = tpl["deputies"]
         update_template_from_channel(self.owner_id, self.channel, deputies)
         await interaction.response.send_message(t("modal_invite_success", user=member.mention), ephemeral=True)
@@ -253,7 +253,7 @@ class RemoveUserSelect(UserSelect):
         await interaction.response.send_message(f"✅ {member.mention} {t('button_unassign').lower()}!", ephemeral=True)
         self.view.stop()
 
-# ——— Вью для селектов ——————————————————————————————————
+# ——— View for Select ——————————————————————————————————
 
 class InviteSelectView(View):
     def __init__(self, channel, owner_id):
@@ -275,7 +275,7 @@ class RemoveSelectView(View):
         super().__init__(timeout=60)
         self.add_item(RemoveUserSelect(channel, owner_id))
 
-# ——— View управления каналом —————————————————————————————————
+# ——— View for channel controls —————————————————————————————————
 
 class ChannelManagementView(View):
     def __init__(self, channel: discord.VoiceChannel, owner_id: int):
@@ -377,25 +377,25 @@ class ChannelManagementView(View):
             await thread.delete()
         await interaction.response.send_message(t("button_delete"), ephemeral=True)
 
-# ——— Создание и авто-удаление приватных VC —————————————————————
+# ——— Creating and auto-deleting private VCs —————————————————————
 
 @bot.event
 async def on_voice_state_update(member, before, after):
-    # 0) Попытаемся «очистить» stale-запись, если канал уже удалён
+    # 0) Attempt to clean up a stale entry if the channel was already deleted
     existing = get_user_vc(member.id)
     if existing:
         chan_id = existing["channel"].id
-        # если в гильдии нет канала с таким ID — удаляем запись
+        # If the guild no longer has a channel with this ID — remove the record
         if member.guild.get_channel(chan_id) is None:
             private_vcs.pop(chan_id, None)
             existing = None
 
-    # 1) Если вошли в триггер и уже есть живой канал — просто перекинуть
+    # 1) If user joined the trigger VC and already has a live channel — just move them into it
     if after.channel and after.channel.id == CREATE_VC_CHANNEL_ID:
         if existing:
             return await member.move_to(existing["channel"])
 
-        # 2) Иначе — создаём новый
+        # 2) Otherwise — create a new channel
         guild    = member.guild
         category = guild.get_channel(VC_CATEGORY_ID)
         tpl      = get_user_template(member.id) or {}
@@ -411,17 +411,17 @@ async def on_voice_state_update(member, before, after):
                 connect=default_connect
             )
         }
-        # приглашённые
+        # Invited users
         for uid in tpl.get("invited", []):
             m = guild.get_member(uid)
             if m:
                 base_overwrites[m] = discord.PermissionOverwrite(view_channel=True, connect=True)
-        # кикнутые
+        # Kicked users
         for uid in tpl.get("kicked", []):
             m = guild.get_member(uid)
             if m:
                 base_overwrites[m] = discord.PermissionOverwrite(connect=False)
-        # владелец и помощники
+        # Owner and deputies
         base_overwrites[member] = discord.PermissionOverwrite(
             view_channel=True, connect=True, manage_channels=True
         )
@@ -441,7 +441,7 @@ async def on_voice_state_update(member, before, after):
         await asyncio.sleep(1)
         await member.move_to(vc)
 
-        # отправляем Embed + вью управления...
+        # Send embed + management view...
         commands_list = "\n".join(
             f"• /{cmd} — {t('cmd_' + cmd + '_desc')}"
             for cmd in ["limit","rename","invite","kick","visible","invisible","lock","unlock","assign","unassign","delete"]
@@ -453,8 +453,8 @@ async def on_voice_state_update(member, before, after):
         )
         try:
             msg = await vc.send(embed=embed, view=ChannelManagementView(vc, member.id))
-            thread = await msg.create_thread(name=f"{member.display_name}-управление", auto_archive_duration=60)
-            await thread.send(f"{member.mention}, управляй каналом здесь 👇")
+            thread = await msg.create_thread(name=f"{member.display_name}-management", auto_archive_duration=60)
+            await thread.send(f"{member.mention}, manage your channel here 👇")
         except Exception:
             thread = None
 
@@ -466,7 +466,7 @@ async def on_voice_state_update(member, before, after):
             "deputies": tpl.get("deputies", [])
         }
 
-    # 3) Авто-удаление пустого канала (как было)
+    # 3) Auto-delete empty VC (as before)
     if before.channel and before.channel.id in private_vcs:
         data = private_vcs[before.channel.id]
         if not before.channel.members:
@@ -477,7 +477,7 @@ async def on_voice_state_update(member, before, after):
                     await data["thread"].delete()
                 private_vcs.pop(before.channel.id, None)
 
-# ============== SLASH-КОМАНДЫ ——————————————————————————————————
+# ============== SLASH-COMMANDS ——————————————————————————————————
 
 @tree.command(name="limit", description=t("cmd_limit_desc"))
 async def limit_cmd(interaction: discord.Interaction, number: int):
