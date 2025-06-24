@@ -27,6 +27,18 @@ pip install -r requirements.txt
 python bot.py
 ```
 
+To make the bot work properly, you need to define two required Discord channel IDs in your code:
+
+```python
+CREATE_VC_CHANNEL_ID = 1386893005578834020  # Channel users join to trigger VC creation
+VC_CATEGORY_ID       = 1386453793012453417  # Category where private VCs will be created
+```
+These values determine:
+- CREATE_VC_CHANNEL_ID: A voice channel that acts as a trigger for creating a private voice channel.
+- VC_CATEGORY_ID: The category where all user-created voice channels will be placed.
+
+💡 If you prefer, you can implement your own `slash` commands to dynamically set these values — I personally didn’t need that 😄
+
 ##🛠️ Features
 - 🎙️ Temporary private voice channel creation
 - 🔒 Invite, kick, lock/unlock, visible/invisible toggles
