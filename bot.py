@@ -561,5 +561,61 @@ async def delete_cmd(interaction: discord.Interaction):
     private_vcs.pop(data["channel"].id, None)
     await interaction.response.send_message(t("button_delete"), ephemeral=True)
 
+@tree.command(name="lock", description=t("cmd_lock_desc"))
+async def lock_cmd(interaction: discord.Interaction):
+    data = get_user_vc(interaction.user.id)
+    if not data:
+        return await interaction.response.send_message(t("error_not_owner"), ephemeral=True)
+    perms = data["channel"].overwrites
+    perms[data["channel"].guild.default_role] = discord.PermissionOverwrite(
+        connect=False,
+        view_channel=perms.get(data["channel"].guild.default_role, discord.PermissionOverwrite()).view_channel
+    )
+    await data["channel"].edit(overwrites=perms)
+    update_template_from_channel(data["owner"], data["channel"], data["deputies"])
+    await interaction.response.send_message(t("button_lock"), ephemeral=True)
+
+@tree.command(name="unlock", description=t("cmd_unlock_desc"))
+async def unlock_cmd(interaction: discord.Interaction):
+    data = get_user_vc(interaction.user.id)
+    if not data:
+        return await interaction.response.send_message(t("error_not_owner"), ephemeral=True)
+    perms = data["channel"].overwrites
+    perms[data["channel"].guild.default_role] = discord.PermissionOverwrite(
+        connect=True,
+        view_channel=perms.get(data["channel"].guild.default_role, discord.PermissionOverwrite()).view_channel
+    )
+    await data["channel"].edit(overwrites=perms)
+    update_template_from_channel(data["owner"], data["channel"], data["deputies"])
+    await interaction.response.send_message(t("button_unlock"), ephemeral=True)
+
+@tree.command(name="visible", description=t("cmd_visible_desc"))
+async def visible_cmd(interaction: discord.Interaction):
+    data = get_user_vc(interaction.user.id)
+    if not data:
+        return await interaction.response.send_message(t("error_not_owner"), ephemeral=True)
+    perms = data["channel"].overwrites
+    perms[data["channel"].guild.default_role] = discord.PermissionOverwrite(
+        view_channel=True,
+        connect=perms.get(data["channel"].guild.default_role, discord.PermissionOverwrite()).connect
+    )
+    await data["channel"].edit(overwrites=perms)
+    update_template_from_channel(data["owner"], data["channel"], data["deputies"])
+    await interaction.response.send_message(t("button_visible"), ephemeral=True)
+
+@tree.command(name="invisible", description=t("cmd_invisible_desc"))
+async def invisible_cmd(interaction: discord.Interaction):
+    data = get_user_vc(interaction.user.id)
+    if not data:
+        return await interaction.response.send_message(t("error_not_owner"), ephemeral=True)
+    perms = data["channel"].overwrites
+    perms[data["channel"].guild.default_role] = discord.PermissionOverwrite(
+        view_channel=False,
+        connect=perms.get(data["channel"].guild.default_role, discord.PermissionOverwrite()).connect
+    )
+    await data["channel"].edit(overwrites=perms)
+    update_template_from_channel(data["owner"], data["channel"], data["deputies"])
+    await interaction.response.send_message(t("button_invisible"), ephemeral=True)
+
 if __name__ == "__main__":
     bot.run(os.getenv("TOKEN"))
