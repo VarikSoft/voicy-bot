@@ -1,4 +1,10 @@
-![Version](https://img.shields.io/badge/version-1.0.0-blue?style=flat-square)![Status](https://img.shields.io/badge/status-stable-brightgreen?style=flat-square)![License](https://img.shields.io/badge/license-MIT-green?style=flat-square)![Python](https://img.shields.io/badge/python-3.10+-blue?style=flat-square&logo=python)![discord.py](https://img.shields.io/badge/discord.py-2.x-blueviolet?style=flat-square&logo=discord)
+<p align="center">
+  <img src="https://img.shields.io/badge/version-1.0.0-blue?style=flat-square" />
+  <img src="https://img.shields.io/badge/status-stable-brightgreen?style=flat-square" />
+  <img src="https://img.shields.io/badge/license-MIT-green?style=flat-square" />
+  <img src="https://img.shields.io/badge/python-3.10+-blue?style=flat-square&logo=python" />
+  <img src="https://img.shields.io/badge/discord.py-2.x-blueviolet?style=flat-square&logo=discord" />
+</p>
 
 # 🔊 Voicy — Discord Private Voice Channel Manager
 
