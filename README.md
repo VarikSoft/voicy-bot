@@ -48,12 +48,12 @@ These values determine:
 💡 If you prefer, you can implement your own `slash` commands to dynamically set these values — I personally didn’t need that 😄
 
 ## 🛠️ Features
-- 🎙️ Temporary private voice channel creation
-- 🔒 Invite, kick, lock/unlock, visible/invisible toggles
-- 👑 Assign deputies with manage rights
-- 💾 Persistent user templates in JSON format
-- 🧵 Management threads created automatically
-- ✨ Slash command support for all channel actions
+- 🎙️ Temporary private voice channel creation.
+- 🔒 Invite, kick, lock/unlock, visible/invisible toggles.
+- 👑 Assign deputies with manage rights.
+- 💾 Persistent user templates in JSON format.
+- 🧵 Management threads created automatically.
+- ✨ Slash command support for all channel actions.
 - 🌍 Multi-language via lang/ru.json, lang/en.json, etc.
 
 ## 📦 Technologies Used
