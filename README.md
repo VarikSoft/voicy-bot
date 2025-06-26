@@ -11,10 +11,10 @@
 Voicy is a Discord bot that lets users create **temporary personal voice channels** with saved preferences, full access control, and an interactive panel to manage everything directly inside Discord.
 
 Each user can have their own private VC with:
-- Saved name, user limit, visibility, and permissions
-- Invite, kick, assign deputies and control access
-- Automatic cleanup after inactivity
-- Settings persist even if the bot restarts
+- Saved name, user limit, visibility, and permissions.
+- Invite, kick, assign deputies and control access.
+- Automatic cleanup after inactivity.
+- Settings persist even if the bot restarts.
 
 ## 🚀 Getting Started
 
