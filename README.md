@@ -84,13 +84,29 @@ BOT_LANG=en
 
 ## 💬 Supported Slash Commands
 Command	Description
-- `/rename`	Rename your voice channel
-- `/limit`	Set a user limit
-- `/invite`	Invite a user
-- `/kick`	Kick/block a user from VC
-- `/assign`	Give someone manage access
-- `/unassign`	Remove deputy rights
-- `/delete`	Manually delete your VC
+- `/rename`               – Rename your voice channel  
+- `/limit`                – Set a user limit  
+- `/invite`               – Invite a user  
+- `/kick`                 – Kick/block a user from VC  
+- `/assign`               – Give someone manage access  
+- `/unassign`             – Remove deputy rights  
+- `/delete`               – Manually delete your VC  
+- `/visible`              – Make your voice channel visible  
+- `/invisible`            – Make your voice channel invisible  
+- `/lock`                 – Lock your voice channel (prevent join)  
+- `/unlock`               – Unlock your voice channel (allow join)
+- `/vcconfig_trigger_set` – Configure the trigger channel for VC creation  
+- `/vcconfig_default_cat` – Configure the default category for VC creation  
+- `/vcconfig_create_cat`  – Configure the category to create new VCs in  
+- `/vcperm_grant`         – Grant a user permission to create voice channels (with duration)  
+- `/vcperm_revoke`        – Revoke a user’s permission to create voice channels (with duration)  
+- `/vcperm_grant_all`     – Grant permission to ALL users (reset to default)  
+- `/vcperm_revoke_all`    – Revoke permission from ALL users (except admins)  
+- `/vcban_add`            – Ban a user from creating voice channels (with duration)  
+- `/vcban_remove`         – Unban a user from creating voice channels  
+- `/vcban_list`           – List users/roles banned from creating voice channels  
+- `/vcperm_list`          – List explicitly granted users/roles  
+- `/vcrevoke_list`        – List users/roles without permission
 
 ## 🧹 Auto-Cleanup
 Voicy automatically deletes the user's voice channel after it's empty for a set number of minutes (`timeout`). Threads are cleaned up too.
